@@ -1,0 +1,130 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        .auth-form {
+            max-width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+        #signup{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id = "login">
+    <div class="auth-form">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <input type="text" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? 
+            <button id="button1">Sign Up</button>
+        </p>
+    </div>
+</div>
+<div id = "signup">
+    <div class="auth-form">
+        <h2>Sign Up</h2>
+        <form id="SignUpForm">
+            <div class="form-group">
+                <input type="text" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <button  id="button2" type="submit">Save</button>
+        </form>
+        
+    </div>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            user = "user";
+            pass = "pass";
+            const button = document.getElementById("button1");
+            const signupdiv = document.getElementById("signup");
+            const logindiv = document.getElementById("login");
+            button.addEventListener("click", function(){
+                signupdiv.style.display = "block";
+                logindiv.style.display = "none";
+            })
+
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = loginForm[0].value;
+                    const password = loginForm[1].value;
+                    authenticateUser(username, password);
+                });
+            }
+
+            const signupform = document.getElementById("SignUpForm");
+            if(signupform)
+            {
+                signupform.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    user = signupform[0].value;
+                    pass = signupform[1].value;
+                    switch_screen();
+                })
+            }
+
+            function authenticateUser(username, password) {
+           
+                if (username == user && password == pass) {
+                    setSessionCookie(username);
+                    window.location.href = '/home.html';
+                } 
+                else 
+                {
+                    alert('Invalid credentials!');
+                    console.log(user);
+                    console.log(pass);
+                }
+            }
+
+            function switch_screen(){
+                signupdiv.style.display = "none";
+                logindiv.style.display = "block";
+            }
+
+            function setSessionCookie(username) {
+                const date = new Date();
+                date.setTime(date.getTime() + (24 * 60 * 60 * 1000)); // 1 day expiration
+                document.cookie = `session=${username}; expires=${date.toUTCString()}; path=/`;
+            }
+        });
+    </script>
+    
+</body>
+
+</html>
+
