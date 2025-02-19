@@ -66,11 +66,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify({}));
+            }
+
             user = "user";
             pass = "pass";
             const button = document.getElementById("button1");
             const signupdiv = document.getElementById("signup");
             const logindiv = document.getElementById("login");
+
             button.addEventListener("click", function(){
                 signupdiv.style.display = "block";
                 logindiv.style.display = "none";
@@ -82,7 +87,7 @@
                     e.preventDefault();
                     const username = loginForm[0].value;
                     const password = loginForm[1].value;
-                    authenticateUser(username, password);
+                    authenticateUser2(username, password);
                 });
             }
 
@@ -93,7 +98,8 @@
                     e.preventDefault();
                     user = signupform[0].value;
                     pass = signupform[1].value;
-                    switch_screen();
+                    createUser(user, pass);
+                    
                 })
             }
 
@@ -109,6 +115,29 @@
                     console.log(user);
                     console.log(pass);
                 }
+            }
+
+            function authenticateUser2(username, password) {
+            const users = JSON.parse(localStorage.getItem('users'));
+            if (users[username] && users[username].password === password) {
+                setSessionCookie(username);
+                window.location.href = '/home.html';
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+            function createUser(username, password) 
+            {
+                const users = JSON.parse(localStorage.getItem('users'));
+                if (users[username]) {
+                    alert('Username already exists!');
+                    return;
+                }
+                users[username] = { password }; // In real apps, never store passwords in plain text
+                localStorage.setItem('users', JSON.stringify(users));
+                setSessionCookie(username);
+                window.location.href = '/home.html';
             }
 
             function switch_screen(){
